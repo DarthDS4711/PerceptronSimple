@@ -32,6 +32,8 @@ class PointBuilder:
             self.class_data = 1
         else:
             self.class_data = 0
+    
+
 '''
 fig, ax = plt.subplots()
 plot = ax.scatter([], [], color='red', marker='x')

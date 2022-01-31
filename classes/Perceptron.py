@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Perceptron:
     def __init__(self):
         # pesos del perceptron
@@ -12,3 +15,12 @@ class Perceptron:
         self.__theta = 0
         # variable de factor de aprendizaje
         self.__factor_learning = 0
+        # variable de número de épocas máximo
+        self.__epochs = 0
+    
+
+    def inicialize_weigths(self):
+        self.__weigth1 = np.random.uniform(0, 3)
+        self.__weigth2 = np.random.uniform(0, 3)
+        print(f'Weigth 1: {self.__weigth1}')
+        print(f'Weigth 2: {self.__weigth2}')
