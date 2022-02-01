@@ -1,5 +1,9 @@
+import numpy as np
+from pyparsing import line
+
+
 class PointBuilder:
-    def __init__(self, fig, ax, plot, another):
+    def __init__(self, fig, ax, plot, another, line):
         self.fig = fig
         self.ax = ax
         self.plot = plot
@@ -9,6 +13,7 @@ class PointBuilder:
         self.dataPlot = []
         self.dataPlot2 = []
         self.class_data = 0
+        self.__line = line
 
     def __call__(self, event):
         # si la figura no contiene un evento
@@ -26,6 +31,15 @@ class PointBuilder:
             self.another.set_offsets(self.dataPlot2)
         # actualización de la figura
         self.fig.canvas.draw()
+    
+
+    def update_line(self, weight1, weigth2, theta):
+        line_points = np.linspace(-5, 5)
+        self.__line.set_xdata(line_points)
+        weights_data = (-weight1 * line_points + theta) / weigth2
+        self.__line.set_ydata(weights_data)
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
 
     def change_class(self):
         if self.class_data == 0:
@@ -33,6 +47,13 @@ class PointBuilder:
         else:
             self.class_data = 0
     
+
+    def get_data_class_one(self):
+        return self.dataPlot
+    
+
+    def get_data_class_two(self):
+        return self.dataPlot2
 
 '''
 fig, ax = plt.subplots()
