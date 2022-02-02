@@ -42,7 +42,24 @@ class Perceptron:
         else:
             return 0
 
+    def __return_value_of_z_out_of_train(self, x1, x2):
+        z = (x1 * self.__weigth1) + (x2 * self.__weigth2) + (self.__weigth0 * self.__bias)
+        if z >= 0:
+            return 1
+        else:
+            return 0
 
+    def predict_data(self, pointBuilder):
+        data = pointBuilder.dataPlot3
+        pointBuilder.ax.cla()
+        pointBuilder.set_data_again()
+        for value in data:
+            x1 = value[0]
+            x2 = value[1]
+            class_predicted = self.__return_value_of_z_out_of_train(x1, x2)
+            pointBuilder.set_new_points(x1, x2, class_predicted)
+        pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0)      
+            
     def get_weigth1(self):
         return self.__weigth1
     
@@ -77,6 +94,7 @@ class Perceptron:
         if n_epochs < self.__epochs:
             self.__done_learn = True
         self.__number_of_epochs = n_epochs
+        pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0)
         print(f'Weigth 1: {self.__weigth1}')
         print(f'Weigth 2: {self.__weigth2}')
         print(f'Theta: {self.__weigth0}')
