@@ -33,7 +33,7 @@ _Ejecutar el archivo main.py con el comando python main.py en la carpeta raiz_
 
 ## Versionado 📌
 
-Proximamente...
+* _Version 1.0.1 PS (release del perceptron simple)_
 
 ## Autores ✒️
 
