@@ -13,6 +13,8 @@ class Window:
         self.__window.geometry('850x620')
         self.__window.wm_title('Perceptron Simple')
         self.__window.minsize(width=850, height=620)
+        # evitar el cambio de tamaño por el usuario
+        self.__window.resizable(False, False)
         self.__frame = Frame(self.__window,  bg='gray22', bd=3)
         self.__frame.grid(row=0, column=0, columnspan=4)
         fig, ax = plt.subplots()
@@ -39,7 +41,7 @@ class Window:
         self.__btn4 = Button(self.__window, padx=5, pady=5, text='Inicialize weigths',
                              command=self.inicialize_random)
         self.__btn5 = Button(self.__window, width=15, text='Test',
-                             command=self.evaluate_points)
+                             command=self.evaluate_points, state=tkinter.DISABLED)
         self.__btn6 = Button(self.__window, text='Quit', bg='red', fg='white',
                              command=self.quit, width=15)
         # botones relacionados a los entrys
@@ -93,11 +95,12 @@ class Window:
         self.__btn_epochs.grid(row=3, column=2)
         self.__btn_learning_rate .grid(row=4, column=2)
 
+    
     # boton para finalizar la execución de la aplicación
-
     def quit(self):
         self.__window.quit()
 
+    # función que actualiza el estado de las cajas de texto
     def update_text_boxes(self, state):
         if state:
             self.__text_theta['state'] = tkinter.NORMAL
@@ -107,6 +110,15 @@ class Window:
             self.__text_theta['state'] = tkinter.DISABLED
             self.__text_epochs['state'] = tkinter.DISABLED
             self.__text_train['state'] = tkinter.DISABLED
+
+    # función que actualiza el estado de los botones relacionados a los inputs
+    def update_buttons_entrys(self, state):
+        if state:
+            self.__btn_epochs['state'] = tkinter.DISABLED
+            self.__btn_learning_rate['state'] = tkinter.DISABLED
+        else:
+            self.__btn_epochs['state'] = tkinter.NORMAL
+            self.__btn_learning_rate['state'] = tkinter.NORMAL
 
 
    # función para mostrar la información por pantalla
@@ -120,13 +132,46 @@ class Window:
            self.__text_train.insert('1.0', "Error")
        self.update_text_boxes(False)
 
+    # función que nos valida si existe información previa para entrenar
+    def __validate_data_to_train(self):
+        number_data_class_one = len(self.__pointsBuilder.get_data_class_one())
+        number_data_class_two = len(self.__pointsBuilder.get_data_class_two())
+        if number_data_class_one == 0 or number_data_class_two == 0:
+            return False
+        else:
+            return True
+
+
+    # función que nos valida que ya se haya registrado el factor de aprendizaje y el número de epocas
+    def __validate_data_epochs_and_flearning(self):
+        epochs = self.__perceptron.get_epochs()
+        f_learning = self.__perceptron.get_factor_learning()
+        if epochs == 0 or f_learning == 0:
+            return False
+        else:
+            return True
+
+    # metodo que comienza a entrenar con los datos actuales
     def train(self):
-        self.block_main_buttons()
-        self.__perceptron.set_inputs_outpus(self.__pointsBuilder.get_data_class_one(),
-                                            self.__pointsBuilder.get_data_class_two())
-        self.__perceptron.train(self.__pointsBuilder)
-        self.show_info()
-        self.__pointsBuilder.change_class(2)
+        if self.__validate_data_to_train():
+            if self.__validate_data_epochs_and_flearning():
+                self.block_main_buttons()
+                self.__pointsBuilder.update_state_event(False)
+                self.update_buttons_entrys(True)
+                self.__perceptron.set_inputs_outpus(self.__pointsBuilder.get_data_class_one(),
+                    self.__pointsBuilder.get_data_class_two())
+            
+                self.__perceptron.train(self.__pointsBuilder)
+                self.show_info()
+                self.__pointsBuilder.change_class(2)
+                self.__btn5['state'] = tkinter.NORMAL
+                self.__pointsBuilder.update_state_event(True)
+            else:
+                 messagebox.showinfo(
+                    message="Factor de aprendizaje o n épocas no asignado", title="Error")     
+        else:
+            messagebox.showinfo(
+                message="No existen datos en una o las dos clases", title="Error")
 
     # Cambio en el tipo de flor a mapear
     def class_flower_rose(self):
@@ -138,11 +183,22 @@ class Window:
     # inicialización de manera aleatoria de los pesos del perceptron
     def inicialize_random(self):
         self.__perceptron.inicialize_weigths()
+        weitgh1 = self.__perceptron.get_weigth1()
+        weitgh2 = self.__perceptron.get_weigth2()
+        weigth0 = self.__perceptron.get_theta()
+        self.__pointsBuilder.update_line(weitgh1, weitgh2, weigth0)
 
     # evaluación de los puntos obtenidos posteriores al entrenamiento
     def evaluate_points(self):
         if len(self.__pointsBuilder.dataPlot3) > 0:
+            self.__pointsBuilder.update_state_event(False)
+            self.__pointsBuilder.change_class(-1)
             self.__perceptron.predict_data(self.__pointsBuilder)
+            self.__pointsBuilder.update_state_event(True)
+            self.__pointsBuilder.change_class(2)
+        else:
+            messagebox.showinfo(
+                message="No existen datos para probar", title="Error")
 
     # función para obtener el learning rate
     def get_learning_rate(self):
@@ -158,7 +214,6 @@ class Window:
                 message="Factor de aprendizaje agregado correctamente", title="Éxito")
 
     # función relacionada a la obtención del número de epocas
-
     def get_epochs(self):
         n_epochs = self.__entry_epochs.get()
         self.__entry_epochs.delete("0", "end")

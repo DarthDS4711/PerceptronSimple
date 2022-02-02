@@ -24,6 +24,13 @@ class Perceptron:
         self.__done_learn = False
         # variable de numero de épocas requeridas
         self.__number_of_epochs = 0
+
+
+    def get_epochs(self):
+        return self.__epochs
+
+    def get_factor_learning(self):
+        return self.__factor_learning
     
 
     def get_number_of_epochs(self):
@@ -33,7 +40,7 @@ class Perceptron:
     def get_status_perceptron(self):
         return self.__done_learn
 
-
+    # función que nos devuelve el valor de la net, evaluado por la función de activación
     def __return_value_of_z(self, index):
         z = (self.__x1[index] * self.__weigth1) + \
             (self.__x2[index] * self.__weigth2) +  (self.__weigth0 * self.__bias)
@@ -42,6 +49,7 @@ class Perceptron:
         else:
             return 0
 
+    # función que nos devuelve el valor de clase predecida para un nuevo elemento
     def __return_value_of_z_out_of_train(self, x1, x2):
         z = (x1 * self.__weigth1) + (x2 * self.__weigth2) + (self.__weigth0 * self.__bias)
         if z >= 0:
@@ -49,16 +57,20 @@ class Perceptron:
         else:
             return 0
 
+    # función de predicción de los nuevos datos
     def predict_data(self, pointBuilder):
         data = pointBuilder.dataPlot3
         pointBuilder.ax.cla()
         pointBuilder.set_data_again()
+        pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0) 
         for value in data:
             x1 = value[0]
             x2 = value[1]
             class_predicted = self.__return_value_of_z_out_of_train(x1, x2)
             pointBuilder.set_new_points(x1, x2, class_predicted)
-        pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0)      
+            time.sleep(1)
+        pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0) 
+        pointBuilder.dataPlot3 = []     
             
     def get_weigth1(self):
         return self.__weigth1
@@ -70,11 +82,15 @@ class Perceptron:
     def get_theta(self):
         return self.__weigth0
 
+
+    # ajuste de los pesos conforme al indice donde se encontró el error 
     def __adjust_weigths(self, error, index):
         self.__weigth1 = self.__weigth1 + (self.__x1[index] * error * self.__factor_learning)
         self.__weigth2 = self.__weigth2 + (self.__x2[index] * error * self.__factor_learning)
         self.__weigth0 = self.__weigth0 + (self.__bias * error * self.__factor_learning)
-    
+
+
+    # función principal de entrenamiento
     def train(self, pointBuilder):
         done = False
         n_epochs = 0

@@ -11,10 +11,6 @@ _Estas instrucciones te permitirán obtener una copia del proyecto en funcionami
 
 _Necesitaras instalar librerias como matplotlib, y el entorno gráfico de tkinker instalado en tu computadora__
 
-```
-Da un ejemplo
-```
-
 ### Instalación 🔧
 
 _Para instalar este proyecto tendras que realizar los siguientes pasos_
@@ -30,8 +26,6 @@ _Instalación matplotlib python -m pip install -U matplotlib__
 _Ejecutar el archivo main.py con el comando python main.py en la carpeta raiz_
 
 ## Construido con 🛠️
-
-_Menciona las herramientas que utilizaste para crear tu proyecto_
 
 * [Matplotlib](https://matplotlib.org/stable/index.html) - Libreria para crear gráficas
 * [Tkinter](https://docs.python.org/3/library/tkinter.html#module-tkinter)- Framework diseño de apps GUI
@@ -55,7 +49,6 @@ Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md
 ## Expresiones de Gratitud 🎁
 
 * Comenta a otros sobre este proyecto 📢
-* Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
 * Da las gracias públicamente 🤓.
 * etc.
 
