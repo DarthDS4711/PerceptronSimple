@@ -12,7 +12,6 @@ class PointBuilder:
         self.cid = self.fig.figure.canvas.mpl_connect('button_press_event', self)
         self.dataPlot = []
         self.dataPlot2 = []
-        self.dataPlot3 = []
         self.class_data = -1 
         self.__line = line
 
@@ -38,9 +37,6 @@ class PointBuilder:
             case 1:
                 self.dataPlot2.append((event.xdata, event.ydata))
                 self.another.set_offsets(self.dataPlot2)
-            case 2:
-                self.dataPlot3.append((event.xdata, event.ydata))
-                self.fig_test.set_offsets(self.dataPlot3)
         # actualización de la figura
         self.fig.canvas.draw()
 
@@ -55,11 +51,6 @@ class PointBuilder:
         self.ax.set_xlim([-5, 5])
         self.ax.set_ylim([-5, 5])
         self.ax.set_title('Perceptron simple')
-
-
-        # solo se actualizan los datos de entrenamiento, los de prueba se agregarán despues
-        self.plot.set_offsets(self.dataPlot)
-        self.another.set_offsets(self.dataPlot2)
         
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()

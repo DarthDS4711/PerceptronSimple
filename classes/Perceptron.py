@@ -57,9 +57,20 @@ class Perceptron:
         else:
             return 0
 
+    # funcion que nos hace el la obtención de los datos
+    def __obtain_data(self, pointBuilder):
+        data = []
+        for value in pointBuilder.dataPlot:
+            data.append((value[0], value[1]))
+        pointBuilder.dataPlot = []
+        for value in pointBuilder.dataPlot2:
+            data.append((value[0], value[1]))
+        pointBuilder.dataPlot2 = []
+        return data  
+
     # función de predicción de los nuevos datos
     def predict_data(self, pointBuilder):
-        data = pointBuilder.dataPlot3
+        data = self.__obtain_data(pointBuilder)
         pointBuilder.ax.cla()
         pointBuilder.set_data_again()
         pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0) 
@@ -69,8 +80,7 @@ class Perceptron:
             class_predicted = self.__return_value_of_z_out_of_train(x1, x2)
             pointBuilder.set_new_points(x1, x2, class_predicted)
             time.sleep(1)
-        pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0) 
-        pointBuilder.dataPlot3 = []     
+        pointBuilder.update_line(self.__weigth1, self.__weigth2, self.__weigth0)     
             
     def get_weigth1(self):
         return self.__weigth1

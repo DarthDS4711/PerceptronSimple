@@ -1,4 +1,4 @@
-from tkinter import Entry, Tk, Frame, Button, Label, messagebox, Text
+from tkinter import Entry, Tk, Frame, Button, Label, messagebox, Text, Radiobutton
 import tkinter
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
@@ -18,8 +18,8 @@ class Window:
         self.__frame = Frame(self.__window,  bg='gray22', bd=3)
         self.__frame.grid(row=0, column=0, columnspan=4)
         fig, ax = plt.subplots()
-        plot = ax.scatter([], [], color='red', marker='x')
-        another = ax.scatter([], [], color='blue', marker='o')
+        plot = ax.scatter([], [], color='black', marker='o')
+        another = ax.scatter([], [], color='black', marker='o')
         fig_test = ax.scatter([], [], color='black', marker='8')
         line, = ax.plot(0, 0, 'b-')
         ax.set_xlim([-5, 5])
@@ -34,14 +34,15 @@ class Window:
         # botones principales del programa
         self.__btn1 = Button(self.__window, text='Train', width=15, bg='green', fg='white',
                              command=self.train)
-        self.__btn2 = Button(self.__window, text='Red Rose', width=15, bg='red', fg='white',
-                             command=self.class_flower_rose)
-        self.__btn3 = Button(self.__window, text='Blue Rose', width=15, bg='blue', fg='white',
-                             command=self.class_flower_white)
+        self.__btn2 = Radiobutton(self.__window, text='Red rose', command=self.class_flower_rose, value=1)
+
+        self.__btn3 = Radiobutton(self.__window, text='Blue Rose',command=self.class_flower_white, value=2)
+
         self.__btn4 = Button(self.__window, padx=5, pady=5, text='Inicialize weigths',
-                             command=self.inicialize_random)
-        self.__btn5 = Button(self.__window, width=15, text='Test',
-                             command=self.evaluate_points, state=tkinter.DISABLED)
+                             command=self.inicialize_random, fg='white', bg='orange')
+        self.__btn5 = Button(self.__window, width=15, text='Test', command=self.evaluate_points, 
+                            state=tkinter.DISABLED, bg='blue', fg='white')
+
         self.__btn6 = Button(self.__window, text='Quit', bg='red', fg='white',
                              command=self.quit, width=15)
         # botones relacionados a los entrys
@@ -163,7 +164,7 @@ class Window:
             
                 self.__perceptron.train(self.__pointsBuilder)
                 self.show_info()
-                self.__pointsBuilder.change_class(2)
+                self.__pointsBuilder.change_class(-1)
                 self.__btn5['state'] = tkinter.NORMAL
                 self.__pointsBuilder.update_state_event(True)
             else:
@@ -190,15 +191,11 @@ class Window:
 
     # evaluación de los puntos obtenidos posteriores al entrenamiento
     def evaluate_points(self):
-        if len(self.__pointsBuilder.dataPlot3) > 0:
-            self.__pointsBuilder.update_state_event(False)
-            self.__pointsBuilder.change_class(-1)
-            self.__perceptron.predict_data(self.__pointsBuilder)
-            self.__pointsBuilder.update_state_event(True)
-            self.__pointsBuilder.change_class(2)
-        else:
-            messagebox.showinfo(
-                message="No existen datos para probar", title="Error")
+        self.__pointsBuilder.update_state_event(False)
+        self.__pointsBuilder.change_class(-1)
+        self.__perceptron.predict_data(self.__pointsBuilder)
+        self.__pointsBuilder.update_state_event(True)
+        self.__pointsBuilder.change_class(2)
 
     # función para obtener el learning rate
     def get_learning_rate(self):
