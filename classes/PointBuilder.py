@@ -3,16 +3,24 @@ import numpy as np
 
 class PointBuilder:
     def __init__(self, fig, ax, plot, another, line, fig_test):
+        # figuras del canvas
         self.fig = fig
         self.ax = ax
         self.plot = plot
         self.another = another
         self.fig_test = fig_test
+        # figuras del barrido
+        self.fig_x = self.ax.scatter([], [], color='darkred', marker='.')
+        self.fig_y = self.ax.scatter([], [], color='darkcyan', marker='.')
         # conexión del evento para detección de clicks
         self.cid = self.fig.figure.canvas.mpl_connect('button_press_event', self)
         self.dataPlot = []
         self.dataPlot2 = []
+        # datos de el barrido
+        self.dataPlot3 = []
+        self.dataPlot4 = []
         self.class_data = -1 
+        # linea que representa la fontera de decisión
         self.__line = line
 
     # función que nos actualizará el estado del evento de clicks
@@ -59,11 +67,11 @@ class PointBuilder:
     def set_new_points(self, x1, x2, class_data):
         match class_data:
             case 0:
-                self.dataPlot.append((x1, x2))
-                self.plot.set_offsets(self.dataPlot)
+                self.dataPlot3.append((x1, x2))
+                self.fig_x.set_offsets(self.dataPlot3)
             case 1:
-                self.dataPlot2.append((x1, x2))
-                self.another.set_offsets(self.dataPlot2)
+                self.dataPlot4.append((x1, x2))
+                self.fig_y.set_offsets(self.dataPlot4)
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
     
@@ -77,6 +85,21 @@ class PointBuilder:
         self.__line.set_ydata(weights_data)
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+
+
+    # función que dibuja en el plano la superficie de decisión
+    def draw_desition_superface(self, perceptron):
+        n_points = 50
+        n_points_y = 12
+        feature_x = np.linspace(-5, 5, n_points)
+        feature_y = np.linspace(-4.7, 4.7, n_points_y)
+        for index in range(0, n_points_y):
+            y = feature_y[index]
+            for subIndex in range(0, n_points):
+                x = feature_x[subIndex]
+                class_predicted = perceptron.return_value_of_z_out_of_train(x, y)
+                self.set_new_points(x, y, class_predicted)
+        
 
     def change_class(self, class_data):
         self.class_data = class_data

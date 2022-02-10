@@ -18,8 +18,8 @@ class Window:
         self.__frame = Frame(self.__window,  bg='gray22', bd=3)
         self.__frame.grid(row=0, column=0, columnspan=4)
         fig, ax = plt.subplots()
-        plot = ax.scatter([], [], color='black', marker='o')
-        another = ax.scatter([], [], color='black', marker='o')
+        plot = ax.scatter([], [], color='red', marker='o')
+        another = ax.scatter([], [], color='blue', marker='o')
         fig_test = ax.scatter([], [], color='black', marker='8')
         line, = ax.plot(0, 0, 'b-')
         ax.set_xlim([-5, 5])
@@ -191,11 +191,7 @@ class Window:
 
     # evaluación de los puntos obtenidos posteriores al entrenamiento
     def evaluate_points(self):
-        self.__pointsBuilder.update_state_event(False)
-        self.__pointsBuilder.change_class(-1)
-        self.__perceptron.predict_data(self.__pointsBuilder)
-        self.__pointsBuilder.update_state_event(True)
-        self.__pointsBuilder.change_class(2)
+        self.__pointsBuilder.draw_desition_superface(self.__perceptron)
 
     # función para obtener el learning rate
     def get_learning_rate(self):
